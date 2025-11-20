@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" 
+  url     = env("DATABASE_URL")
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  name       String
+  email      String     @unique
+  created_at DateTime?  @default(now())
+  password   String
+  books      Book[]
+  BookNote   BookNote[]
+  streak     Streak?
+}
+
+model Book {
+  id           Int        @id @default(autoincrement())
+  name         String
+  author       String
+  total_pages  Int
+  current_page Int
+  status       String
+  created_at   DateTime?  @default(now())
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id])
+  notes        BookNote[]
+}
+
+model BookNote {
+  id         Int     @id @default(autoincrement())
+  title      String
+  text       String
+  bookId     Int
+  userId     Int
+  chapter    Int?
+  pageNumber String?
+  book       Book    @relation(fields: [bookId], references: [id])
+  user       User    @relation(fields: [userId], references: [id])
+}
+
+model Streak {
+  id             Int      @id @default(autoincrement())
+  current_streak Int
+  max_streak     Int
+  lastStreakDate DateTime
+  userId         Int      @unique
+  user           User     @relation(fields: [userId], references: [id])
+}
