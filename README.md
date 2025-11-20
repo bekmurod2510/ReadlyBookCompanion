@@ -1,2 +1,2 @@
-# KitobYo-ldosh
+# Readly
 Your Book Companion
